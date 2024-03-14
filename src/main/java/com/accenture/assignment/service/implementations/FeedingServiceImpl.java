@@ -13,11 +13,9 @@ import com.accenture.assignment.data.repository.HorseRepository;
 import com.accenture.assignment.service.FeedingService;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class FeedingServiceImpl implements FeedingService {
@@ -95,7 +93,7 @@ public class FeedingServiceImpl implements FeedingService {
         } else {
             feedingEntityList = feedingRepository.getFeedingsAfterLocalTimeParam(localTime);
         }
-        return feedingEntityList.stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).collect(Collectors.toList());
+        return feedingEntityList.stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList();
     }
 
     @Override
@@ -105,5 +103,38 @@ public class FeedingServiceImpl implements FeedingService {
         FeedingEntity feedingEntity = feedingRepository.getFeedingByHorseId(horseEntity.getId());
         feedingEntity.setDone(true);
         feedingRepository.save(feedingEntity);
+    }
+
+    @Override
+    public List<HorseDTO> checkHorsesEligibleForFeedingButNotBeenFed(Duration hours, LocalTime localTime) {
+        //6. check if horses have not been fed even when eligible for more than x hours
+        LocalTime newLocalTime = localTime.minus(hours);
+        List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(newLocalTime);
+        return feedingEntityList
+                .stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList()
+                .stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HorseDTO> checkHorsesByNumberOfMissedFeedingRanges(Integer number, LocalTime localTime) {
+        //7. check horses that have missed their feedingRanges x or more times
+        //TODO: implement in a row functionality
+        List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(localTime);
+        List<HorseDTO> horseDTOList = feedingEntityList.stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList();
+        List<HorseDTO> finalList = new ArrayList<>();
+        for (HorseDTO horseDTO: horseDTOList) {
+            int tmp = Collections.frequency(horseDTOList,horseDTO);
+            if (tmp >= number && !finalList.contains(horseDTO)) finalList.add(horseDTO);
+        }
+        return finalList;
+    }
+
+    @Override
+    public List<HorseDTO> checkHorsesWithNotFinishedFeedings(LocalTime localTime) {
+        //8. check horses that did not complete their meals
+        List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
+        return feedingEntityList
+                .stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList()
+                .stream().distinct().collect(Collectors.toList());
     }
 }

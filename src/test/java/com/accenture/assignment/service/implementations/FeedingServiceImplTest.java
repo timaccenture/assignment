@@ -12,18 +12,22 @@ import com.accenture.assignment.data.repository.FoodRepository;
 import com.accenture.assignment.data.repository.HorseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -118,4 +122,227 @@ public class FeedingServiceImplTest {
         verify(feedingRepository).getFeedingByHorseId(horseEntity.getId());
         verify(feedingRepository).save(feedingEntity);
     }
+
+    @Test
+    void testCheckHorsesEligibleForFeedingButNotBeenFed() {
+        FeedingEntity feedingEntity = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(10, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().build())
+                .build();
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(LocalTime.of(10, 0)))
+                .thenReturn(List.of(feedingEntity));
+        when(horseMapper.horseEntityToDto(HorseEntity.builder().build())).thenReturn(HorseDTO.builder().build());
+
+        List<HorseDTO> returnedHorseDTOList = feedingServiceImpl.checkHorsesEligibleForFeedingButNotBeenFed(
+                Duration.ofHours(2),
+                LocalTime.of(12, 0));
+
+        assertFalse(returnedHorseDTOList.stream().allMatch(Objects::isNull)); //check if list contains only nulls
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotDone(LocalTime.of(10, 0));
+        verify(horseMapper).horseEntityToDto(HorseEntity.builder().build());
+    };
+
+    private static Stream<Arguments>  argumentsStream() {
+        return Stream.of(
+                Arguments.of(0,2),
+                Arguments.of(1,2),
+                Arguments.of(2,1),
+                Arguments.of(3,0)
+        );
+    }
+    @ParameterizedTest
+    @MethodSource("argumentsStream")
+    void testCheckHorsesByNumberOfMissedFeedingRanges(Integer number, Integer expected) {
+        FeedingEntity feedingEntity1 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(10, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+        FeedingEntity feedingEntity2 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(6, 0))
+                .endTime(LocalTime.of(6, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+        FeedingEntity feedingEntity3 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(7, 0))
+                .endTime(LocalTime.of(7, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(2L).build())
+                .build();
+        LocalTime localTime = LocalTime.of(11,0);
+        // first horse with three feedingEntities, missed two of them
+        // second horse with one feedingEntitiy, missed it
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(localTime)).thenReturn(List.of(feedingEntity1,feedingEntity2,feedingEntity3));
+        when(horseMapper.horseEntityToDto(feedingEntity1.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+        when(horseMapper.horseEntityToDto(feedingEntity2.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+        when(horseMapper.horseEntityToDto(feedingEntity3.getHorse())).thenReturn(HorseDTO.builder().id(2L).build());
+
+        List<HorseDTO> returnedList = feedingServiceImpl.checkHorsesByNumberOfMissedFeedingRanges(number,localTime);
+
+        assertEquals(expected,returnedList.size());
+
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotDone(localTime);
+        verify(horseMapper,times(2)).horseEntityToDto(feedingEntity1.getHorse());
+        verify(horseMapper).horseEntityToDto(feedingEntity3.getHorse());
+    }
+
+    @Test
+    void testCheckHorsesWithNotFinishedFeedings0() {
+        FeedingEntity feedingEntity1 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(10, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+        FeedingEntity feedingEntity2 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(6, 0))
+                .endTime(LocalTime.of(6, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+        FeedingEntity feedingEntity3 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(7, 0))
+                .endTime(LocalTime.of(7, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(2L).build())
+                .build();
+        LocalTime localTime = LocalTime.of(11,0);
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime)).thenReturn(List.of(feedingEntity1,feedingEntity2,feedingEntity3));
+        when(horseMapper.horseEntityToDto(feedingEntity1.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+        when(horseMapper.horseEntityToDto(feedingEntity2.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+        when(horseMapper.horseEntityToDto(feedingEntity3.getHorse())).thenReturn(HorseDTO.builder().id(2L).build());
+
+        List<HorseDTO> horseDTOList = feedingServiceImpl.checkHorsesWithNotFinishedFeedings(localTime);
+
+        assertEquals(2,horseDTOList.size());
+
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
+        verify(horseMapper,times(2)).horseEntityToDto(feedingEntity1.getHorse());
+        verify(horseMapper).horseEntityToDto(feedingEntity3.getHorse());
+    }
+
+    private static Stream<Arguments> argumentStream1() {
+        return Stream.of(
+                Arguments.of(false, false, false, 2),
+                Arguments.of(false, true, false, 2),
+                Arguments.of(false, true, true, 1),
+                Arguments.of(true, true, true, 0)
+        );
+    }
+
+    @Test
+    void testCheckHorsesWithNotFinishedFeedings2() {
+        FeedingEntity feedingEntity1 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(10, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+        FeedingEntity feedingEntity3 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(7, 0))
+                .endTime(LocalTime.of(7, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(2L).build())
+                .build();
+        LocalTime localTime = LocalTime.of(11,0);
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime)).thenReturn(List.of(feedingEntity1,feedingEntity3));
+        when(horseMapper.horseEntityToDto(feedingEntity1.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+        when(horseMapper.horseEntityToDto(feedingEntity3.getHorse())).thenReturn(HorseDTO.builder().id(2L).build());
+
+        List<HorseDTO> horseDTOList = feedingServiceImpl.checkHorsesWithNotFinishedFeedings(localTime);
+
+        assertEquals(2,horseDTOList.size());
+
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
+        verify(horseMapper).horseEntityToDto(feedingEntity1.getHorse());
+        verify(horseMapper).horseEntityToDto(feedingEntity3.getHorse());
+    }
+
+    @Test
+    void testCheckHorsesWithNotFinishedFeedings3() {
+        FeedingEntity feedingEntity1 = FeedingEntity.builder()
+                .id(1L)
+                .startWeight(5)
+                .endWeight(1)
+                .ateAll(false)
+                .done(false)
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(10, 30))
+                .eatingDuration(Duration.ofMinutes(30))
+                .horse(HorseEntity.builder().id(1L).build())
+                .build();
+
+        LocalTime localTime = LocalTime.of(11,0);
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime)).thenReturn(List.of(feedingEntity1));
+        when(horseMapper.horseEntityToDto(feedingEntity1.getHorse())).thenReturn(HorseDTO.builder().id(1L).build());
+
+        List<HorseDTO> horseDTOList = feedingServiceImpl.checkHorsesWithNotFinishedFeedings(localTime);
+
+        assertEquals(1,horseDTOList.size());
+
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
+        verify(horseMapper).horseEntityToDto(feedingEntity1.getHorse());
+    }
+
+    @Test
+    void testCheckHorsesWithNotFinishedFeedings4() {
+        LocalTime localTime = LocalTime.of(11,0);
+        when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime)).thenReturn(List.of());
+
+        List<HorseDTO> horseDTOList = feedingServiceImpl.checkHorsesWithNotFinishedFeedings(localTime);
+
+        assertTrue(horseDTOList.isEmpty());
+
+        verify(feedingRepository).getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
+    }
+
 }
