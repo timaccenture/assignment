@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "horses")
 @Builder
 public class StableEntity {
 
@@ -19,8 +19,7 @@ public class StableEntity {
     Long id;
     String name;
     String address;
-    @OneToMany
-    @JoinColumn(name = "stable_id")
-    List<HorseEntity> horseEntityList;
+    @OneToMany(targetEntity = HorseEntity.class, mappedBy = "stable",cascade = CascadeType.ALL, orphanRemoval = true)
+    List<HorseEntity> horses;
 
 }

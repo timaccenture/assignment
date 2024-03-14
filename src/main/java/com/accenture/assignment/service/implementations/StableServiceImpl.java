@@ -2,21 +2,27 @@ package com.accenture.assignment.service.implementations;
 
 import com.accenture.assignment.data.dtos.mapper.StableMapper;
 import com.accenture.assignment.data.dtos.StableDTO;
+import com.accenture.assignment.data.model.HorseEntity;
 import com.accenture.assignment.data.model.StableEntity;
+import com.accenture.assignment.data.repository.HorseRepository;
 import com.accenture.assignment.data.repository.StableRepository;
 import com.accenture.assignment.service.StableService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class StableServiceImpl implements StableService {
-    public final StableRepository stableRepository;
-    public final StableMapper mapper;
+    private final StableRepository stableRepository;
+    private final HorseRepository horseRepository;
+    private final StableMapper mapper;
 
-    public StableServiceImpl(StableRepository stableRepository, StableMapper stableMapper) {
+    public StableServiceImpl(StableRepository stableRepository, HorseRepository horseRepository, StableMapper stableMapper) {
         this.stableRepository = stableRepository;
+        this.horseRepository = horseRepository;
         this.mapper = stableMapper;
     }
 
@@ -49,8 +55,13 @@ public class StableServiceImpl implements StableService {
 
     @Override
     public StableDTO updateById(Long id, StableDTO dto) {
-        StableEntity entity = mapper.stableDTOToEntity(dto);
-        entity.setId(id);
-        return mapper.stableEntityToDTO(stableRepository.save(entity));
+        List<HorseEntity> horseEntityList = new ArrayList<>();
+        for (Long horseId: dto.getHorseIds()){
+            horseEntityList.add(horseRepository.findById(horseId).orElseThrow(RuntimeException::new));
+        }
+        StableEntity stableEntity = stableRepository.findById(dto.getId()).orElseThrow(RuntimeException::new);
+        stableEntity.setHorses(horseEntityList);
+        stableEntity.setId(id);
+        return mapper.stableEntityToDTO(stableRepository.save(stableEntity));
     }
 }

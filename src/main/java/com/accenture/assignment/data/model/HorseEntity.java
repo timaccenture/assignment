@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 @Builder
 public class HorseEntity {
     @Id
@@ -23,8 +25,12 @@ public class HorseEntity {
     String name;
     String nickName;
     String breed;
-    //TODO: implement OwnerEntity instead of String
-    String owner;
-    List<LocalTime> feedingRanges;
-
+    LocalDate joined;
+    Integer feedingsPerDay;
+    //one owner can own many horses, but one horse cannot have many owners
+    @ManyToOne(fetch = FetchType.LAZY)
+    OwnerEntity owner;
+    //one stable has many horses, but one horse cannot be in multiple stables
+    @ManyToOne(fetch = FetchType.LAZY)
+    StableEntity stable;
 }

@@ -10,8 +10,9 @@ public interface HorseService {
     void create(HorseDTO dto);
     List<HorseDTO> findAll();
     HorseDTO getById(Long id);
-    HorseEntity getEntityById(Long id);
     void deleteById(Long id);
     HorseDTO updateById(Long id, HorseDTO dto);
+
+
 
 }
