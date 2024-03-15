@@ -35,7 +35,7 @@ public class HorseControllerTest {
     void setUp(){
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        horseDTO = HorseDTO.builder().id(5L).build();
+        horseDTO = HorseDTO.builder().id(5L).ownerId(2L).stableId(1L).build();
     }
     @Test
     void testCreateHorse() throws Exception {

@@ -26,7 +26,6 @@ public class FeedingDTO {
     Boolean done;
     LocalTime startTime;
     LocalTime endTime;
-    Duration eatingDuration;
     Long horseId;
     List<Long> foodIds;
 }

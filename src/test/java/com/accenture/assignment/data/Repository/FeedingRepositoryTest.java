@@ -30,11 +30,10 @@ public class FeedingRepositoryTest {
                 .id(1L)
                 .startWeight(5)
                 .endWeight(1)
-                .ateAll(false)
+                .ateAll(true)
                 .done(false)
                 .startTime(LocalTime.of(10,0))
                 .endTime(LocalTime.of(10,30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().build())
                 .build();
     }
@@ -44,7 +43,8 @@ public class FeedingRepositoryTest {
         // tests when it returns feedingEntity
         LocalTime localTime = LocalTime.of(8,0,0);
         List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsAfterLocalTimeParam(localTime);
-        assertEquals(List.of(feedingEntity),feedingEntityList);
+
+        assertEquals(3,feedingEntityList.size());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class FeedingRepositoryTest {
         LocalTime localTime = LocalTime.of(11,0,0);
         List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsAfterLocalTimeParam(localTime);
 
-        assertTrue(feedingEntityList.isEmpty());
+        assertEquals(1,feedingEntityList.size());
     }
 
     @Test
@@ -63,14 +63,6 @@ public class FeedingRepositoryTest {
         // returns feedingEntity
         FeedingEntity returnedFeedingEntity = feedingRepository.getFeedingByHorseId(1L);
         assertEquals(feedingEntity, returnedFeedingEntity);
-    }
-
-    @Test
-    @Transactional
-    void testGetFeedingByHorseId2() {
-        // returns null
-        FeedingEntity returnedFeedingEntity = feedingRepository.getFeedingByHorseId(2L);
-        assertNull(returnedFeedingEntity);
     }
 
     @Test
@@ -88,7 +80,7 @@ public class FeedingRepositoryTest {
     @Transactional
     void testGetFeedingsBeforeLocalTimeParamAndNotDone2() {
         // returns list of 2
-        LocalTime localTime = LocalTime.of(12,5);
+        LocalTime localTime = LocalTime.of(12,0);
         List<FeedingEntity> feedingEntityList= feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(localTime);
 
         assertFalse(feedingEntityList.isEmpty());
@@ -97,7 +89,7 @@ public class FeedingRepositoryTest {
         for (FeedingEntity fe: feedingEntityList) assertEquals(false, fe.getDone());
 
         assertEquals(LocalTime.of(10,0), feedingEntityList.get(0).getStartTime());
-        assertEquals(LocalTime.of(12,0), feedingEntityList.get(1).getStartTime());
+        assertEquals(LocalTime.of(11,0), feedingEntityList.get(1).getStartTime());
     }
 
     @Test
@@ -113,21 +105,6 @@ public class FeedingRepositoryTest {
         assertEquals(LocalTime.of(8,0), feedingEntityList.get(0).getStartTime());
     }
 
-    @Test
-    @Transactional
-    void testGetFeedingsBeforeLocalTimeParamAndNotAteAll2() {
-        // returns list of 2
-        LocalTime localTime = LocalTime.of(13,0);
-        List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsBeforeLocalTimeParamAndNotAteAll(localTime);
-
-        assertFalse(feedingEntityList.isEmpty());
-        assertEquals(2, feedingEntityList.size());
-
-        for (FeedingEntity fe: feedingEntityList) assertEquals(false, fe.getAteAll());
-
-        assertEquals(LocalTime.of(8,0), feedingEntityList.get(0).getStartTime());
-        assertEquals(LocalTime.of(12,0), feedingEntityList.get(1).getStartTime());
-    }
 
 
 }

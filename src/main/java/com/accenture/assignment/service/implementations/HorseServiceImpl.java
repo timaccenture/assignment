@@ -33,6 +33,10 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public void create(HorseDTO dto) {
         HorseEntity entity = mapper.horseDtoToEntity(dto);
+        OwnerEntity ownerEntity = ownerRepository.findById(dto.getOwnerId()).orElseThrow(RuntimeException::new);
+        StableEntity stableEntity = stableRepository.findById(dto.getStableId()).orElseThrow(RuntimeException::new);
+        entity.setOwner(ownerEntity);
+        entity.setStable(stableEntity);
         horseRepository.save(entity);
     }
 

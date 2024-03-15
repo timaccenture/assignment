@@ -15,6 +15,6 @@ public class FoodEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
-    Double weight;
+    Integer weight;
 
 }

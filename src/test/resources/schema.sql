@@ -11,11 +11,11 @@ drop table if exists stable_entity_seq
 drop table if exists stable_entity
 create table feeding_entity_seq (next_val bigint) engine=InnoDB
 insert into feeding_entity_seq values ( 100 )
-create table feeding_entity (ate_all bit, done bit, eating_duration decimal(21,0), end_time time(6), end_weight integer, start_time time(6), start_weight integer, horse_id bigint, id bigint not null, primary key (id)) engine=InnoDB
+create table feeding_entity (ate_all bit, done bit, end_time time(6), end_weight integer, start_time time(6), start_weight integer, horse_id bigint, id bigint not null, primary key (id)) engine=InnoDB
 create table feeding_entity_foods (feeding_entity_id bigint not null, foods_id bigint not null) engine=InnoDB
 create table food_entity_seq (next_val bigint) engine=InnoDB
 insert into food_entity_seq values ( 100 )
-create table food_entity (weight float(53), id bigint not null, name varchar(255), primary key (id)) engine=InnoDB
+create table food_entity (weight integer, id bigint not null, name varchar(255), primary key (id)) engine=InnoDB
 create table horse_entity_seq (next_val bigint) engine=InnoDB
 insert into horse_entity_seq values ( 100 )
 create table horse_entity (feedings_per_day integer, joined date, id bigint not null, owner_id bigint, stable_id bigint, uuid binary(16), breed varchar(255), name varchar(255), nick_name varchar(255), primary key (id)) engine=InnoDB

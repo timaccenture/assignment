@@ -39,12 +39,19 @@ public class HorseServiceImplTest {
     void testCreate() {
         HorseDTO horseDTO = HorseDTO.builder().id(3L).build();
         HorseEntity horseEntity = HorseEntity.builder().id(3L).build();
+        OwnerEntity ownerEntity = OwnerEntity.builder().build();
+        StableEntity stableEntity = StableEntity.builder().build();
 
         when(horseRepository.save(horseEntity)).thenReturn(horseEntity);
+        when(ownerRepository.findById(horseDTO.getOwnerId())).thenReturn(Optional.of(ownerEntity));
+        when(stableRepository.findById(horseDTO.getStableId())).thenReturn(Optional.of(stableEntity));
         when(horseMapper.horseDtoToEntity(horseDTO)).thenReturn(horseEntity);
+
         horseServiceImpl.create(horseDTO);
 
         verify(horseRepository).save(horseEntity);
+        verify(ownerRepository).findById(horseDTO.getOwnerId());
+        verify(stableRepository).findById(horseDTO.getStableId());
         verify(horseMapper).horseDtoToEntity(horseDTO);
     }
 

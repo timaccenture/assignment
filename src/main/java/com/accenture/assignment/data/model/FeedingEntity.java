@@ -24,7 +24,6 @@ public class FeedingEntity {
     Boolean done;
     LocalTime startTime;
     LocalTime endTime;
-    Duration eatingDuration;
 
     //one horse has many feeding entities
     @ManyToOne

@@ -133,7 +133,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(10, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().build())
                 .build();
         when(feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(LocalTime.of(10, 0)))
@@ -168,7 +167,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(10, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
         FeedingEntity feedingEntity2 = FeedingEntity.builder()
@@ -179,7 +177,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(6, 0))
                 .endTime(LocalTime.of(6, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
         FeedingEntity feedingEntity3 = FeedingEntity.builder()
@@ -190,7 +187,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(7, 0))
                 .endTime(LocalTime.of(7, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(2L).build())
                 .build();
         LocalTime localTime = LocalTime.of(11,0);
@@ -220,7 +216,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(10, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
         FeedingEntity feedingEntity2 = FeedingEntity.builder()
@@ -231,7 +226,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(6, 0))
                 .endTime(LocalTime.of(6, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
         FeedingEntity feedingEntity3 = FeedingEntity.builder()
@@ -242,7 +236,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(7, 0))
                 .endTime(LocalTime.of(7, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(2L).build())
                 .build();
         LocalTime localTime = LocalTime.of(11,0);
@@ -279,7 +272,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(10, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
         FeedingEntity feedingEntity3 = FeedingEntity.builder()
@@ -290,7 +282,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(7, 0))
                 .endTime(LocalTime.of(7, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(2L).build())
                 .build();
         LocalTime localTime = LocalTime.of(11,0);
@@ -317,7 +308,6 @@ public class FeedingServiceImplTest {
                 .done(false)
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(10, 30))
-                .eatingDuration(Duration.ofMinutes(30))
                 .horse(HorseEntity.builder().id(1L).build())
                 .build();
 

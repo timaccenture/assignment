@@ -66,8 +66,8 @@ public class FeedingControllerTest {
     }
     private static Stream<Arguments> dataMethod() {
         return Stream.of(
-                Arguments.of(LocalTime.of(6,0),2),
-                Arguments.of(LocalTime.of(9,0),1)
+                Arguments.of(LocalTime.of(6,0),3),
+                Arguments.of(LocalTime.of(9,0),2)
         );
     }
     @ParameterizedTest
