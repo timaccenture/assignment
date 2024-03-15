@@ -4,12 +4,10 @@ import com.accenture.assignment.data.dtos.FeedingDTO;
 import com.accenture.assignment.data.dtos.HorseDTO;
 import com.accenture.assignment.service.FeedingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -70,6 +68,16 @@ public class FeedingController {
     @GetMapping("/feeding/a/ateall/{localTime}")
     public ResponseEntity<List<HorseDTO>> findHorsesWithNotFinishedFeedings(@PathVariable("localTime") LocalTime localTime) {
         return new ResponseEntity<>(feedingService.checkHorsesWithNotFinishedFeedings(localTime), HttpStatus.OK);
+    }
+
+    @PutMapping("/feeding/horse/{id}")
+    public ResponseEntity<FeedingDTO> addHorseToFeeding(@PathVariable("id") Long feedingId, @RequestBody Long horseId) {
+        return new ResponseEntity<>(feedingService.addHorseToFeeding(feedingId, horseId),HttpStatus.OK);
+    }
+
+    @PutMapping("/feeding/food/{id}")
+    public ResponseEntity<FeedingDTO> addFoodToFeeding(@PathVariable("id") Long feedingId, @RequestBody List<Long> foodIds) {
+        return new ResponseEntity<>(feedingService.addFoodToFeeding(feedingId,foodIds),HttpStatus.OK);
     }
 
 }

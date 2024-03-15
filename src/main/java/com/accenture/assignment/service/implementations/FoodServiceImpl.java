@@ -1,11 +1,9 @@
 package com.accenture.assignment.service.implementations;
 
 import com.accenture.assignment.data.dtos.FoodDTO;
-import com.accenture.assignment.data.dtos.mapper.FeedingMapper;
 import com.accenture.assignment.data.dtos.mapper.FoodMapper;
 import com.accenture.assignment.data.model.FoodEntity;
 import com.accenture.assignment.data.repository.FoodRepository;
-import com.accenture.assignment.service.FeedingService;
 import com.accenture.assignment.service.FoodService;
 import org.springframework.stereotype.Service;
 

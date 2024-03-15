@@ -1,9 +1,7 @@
 package com.accenture.assignment.controller;
 
 import com.accenture.assignment.data.dtos.HorseDTO;
-import com.accenture.assignment.data.model.HorseEntity;
 import com.accenture.assignment.service.HorseService;
-import com.accenture.assignment.service.implementations.HorseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

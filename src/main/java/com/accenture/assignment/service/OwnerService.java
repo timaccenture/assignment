@@ -2,7 +2,6 @@ package com.accenture.assignment.service;
 
 import com.accenture.assignment.data.dtos.OwnerDTO;
 import com.accenture.assignment.data.model.OwnerEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

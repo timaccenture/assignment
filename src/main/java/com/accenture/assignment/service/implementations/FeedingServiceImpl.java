@@ -3,6 +3,7 @@ package com.accenture.assignment.service.implementations;
 import com.accenture.assignment.data.dtos.FeedingDTO;
 import com.accenture.assignment.data.dtos.HorseDTO;
 import com.accenture.assignment.data.dtos.mapper.FeedingMapper;
+import com.accenture.assignment.data.dtos.mapper.FoodMapper;
 import com.accenture.assignment.data.dtos.mapper.HorseMapper;
 import com.accenture.assignment.data.model.FeedingEntity;
 import com.accenture.assignment.data.model.FoodEntity;
@@ -22,13 +23,16 @@ public class FeedingServiceImpl implements FeedingService {
 
     private final FeedingMapper feedingMapper;
     private final HorseMapper horseMapper;
+    private final FoodMapper foodMapper;
     private final FeedingRepository feedingRepository;
     private final HorseRepository horseRepository;
     private final FoodRepository foodRepository;
 
-    public FeedingServiceImpl(FeedingMapper feedingMapper, HorseMapper horseMapper, FeedingRepository feedingRepository, HorseRepository horseRepository, FoodRepository foodRepository) {
+
+    public FeedingServiceImpl(FeedingMapper feedingMapper, HorseMapper horseMapper, FoodMapper foodMapper, FeedingRepository feedingRepository, HorseRepository horseRepository, FoodRepository foodRepository) {
         this.feedingMapper = feedingMapper;
         this.horseMapper = horseMapper;
+        this.foodMapper = foodMapper;
         this.feedingRepository = feedingRepository;
         this.horseRepository = horseRepository;
         this.foodRepository = foodRepository;
@@ -85,6 +89,24 @@ public class FeedingServiceImpl implements FeedingService {
 //        feedingEntity.setHorse(horseEntity);
 //        feedingRepository.save(feedingEntity);
 //    }
+
+
+    @Override
+    public FeedingDTO addHorseToFeeding(Long feedingId, Long horseId) {
+        FeedingEntity feedingEntity = feedingRepository.findById(feedingId).orElseThrow(RuntimeException::new);
+        HorseEntity horseEntity = horseRepository.findById(horseId).orElseThrow(RuntimeException::new);
+        feedingEntity.setHorse(horseEntity);
+        return feedingMapper.feedingEntityToDto(feedingRepository.save(feedingEntity));
+    }
+
+    @Override
+    public FeedingDTO addFoodToFeeding(Long feedingId, List<Long> foodIds) {
+        FeedingEntity feedingEntity = feedingRepository.findById(feedingId).orElseThrow(RuntimeException::new);
+        List<FoodEntity> foods = foodIds.stream().map(id -> foodRepository.findById(id).orElseThrow(RuntimeException::new)).collect(Collectors.toList());
+        feedingEntity.setFoods(foods);
+        System.out.println(foods);
+        return feedingMapper.feedingEntityToDto(feedingRepository.save(feedingEntity));
+    }
 
     @Override
     public List<HorseDTO> checkHorsesEligibleForFeeding(LocalTime localTime) {

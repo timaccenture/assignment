@@ -1,7 +1,6 @@
 package com.accenture.assignment.service;
 
 import com.accenture.assignment.data.dtos.FoodDTO;
-import com.accenture.assignment.data.model.FoodEntity;
 
 import java.util.List;
 

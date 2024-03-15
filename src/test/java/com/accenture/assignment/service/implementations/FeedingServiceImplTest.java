@@ -18,13 +18,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +86,16 @@ public class FeedingServiceImplTest {
         verify(feedingRepository).findById(feedingDTO.getId());
         verify(feedingRepository).save(feedingEntity);
         verify(feedingMapper).feedingEntityToDto(feedingEntity);
+    }
+
+    @Test
+    void testAddHorseToFeeding() {
+        //TODO: implement test
+    }
+
+    @Test
+    void testAddFoodToFeeding() {
+        //TODO: implement test
     }
 
     @Test

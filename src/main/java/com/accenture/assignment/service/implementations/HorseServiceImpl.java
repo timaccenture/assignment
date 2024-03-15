@@ -1,7 +1,7 @@
 package com.accenture.assignment.service.implementations;
 
-import com.accenture.assignment.data.dtos.mapper.HorseMapper;
 import com.accenture.assignment.data.dtos.HorseDTO;
+import com.accenture.assignment.data.dtos.mapper.HorseMapper;
 import com.accenture.assignment.data.model.HorseEntity;
 import com.accenture.assignment.data.model.OwnerEntity;
 import com.accenture.assignment.data.model.StableEntity;
@@ -9,7 +9,6 @@ import com.accenture.assignment.data.repository.HorseRepository;
 import com.accenture.assignment.data.repository.OwnerRepository;
 import com.accenture.assignment.data.repository.StableRepository;
 import com.accenture.assignment.service.HorseService;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;

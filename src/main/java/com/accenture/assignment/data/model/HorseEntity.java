@@ -3,10 +3,7 @@ package com.accenture.assignment.data.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.time.*;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity

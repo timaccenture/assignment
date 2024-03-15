@@ -2,11 +2,7 @@ package com.accenture.assignment.service;
 
 import com.accenture.assignment.data.dtos.FeedingDTO;
 import com.accenture.assignment.data.dtos.HorseDTO;
-import com.accenture.assignment.data.model.FeedingEntity;
-import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +15,8 @@ public interface FeedingService {
     void deleteById(Long id);
     FeedingDTO updateById(Long id, FeedingDTO feedingDTO);
 
-//    void addHorseToFeeding(Long feedingId, Long horseId);
+    FeedingDTO addHorseToFeeding(Long feedingId, Long horseId);
+    FeedingDTO addFoodToFeeding(Long feedingId, List<Long> foodIds);
 
     List<HorseDTO> checkHorsesEligibleForFeeding(LocalTime localTime);
 

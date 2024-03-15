@@ -1,7 +1,6 @@
 package com.accenture.assignment.service;
 
 import com.accenture.assignment.data.dtos.HorseDTO;
-import com.accenture.assignment.data.model.HorseEntity;
 
 import java.util.List;
 

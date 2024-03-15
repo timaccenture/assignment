@@ -1,7 +1,7 @@
 package com.accenture.assignment.service.implementations;
 
-import com.accenture.assignment.data.dtos.mapper.HorseMapper;
 import com.accenture.assignment.data.dtos.HorseDTO;
+import com.accenture.assignment.data.dtos.mapper.HorseMapper;
 import com.accenture.assignment.data.model.HorseEntity;
 import com.accenture.assignment.data.model.OwnerEntity;
 import com.accenture.assignment.data.model.StableEntity;
@@ -10,7 +10,6 @@ import com.accenture.assignment.data.repository.OwnerRepository;
 import com.accenture.assignment.data.repository.StableRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,8 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class HorseServiceImplTest {

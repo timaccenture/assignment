@@ -2,10 +2,7 @@ package com.accenture.assignment.data.dtos;
 
 import lombok.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +20,6 @@ public class HorseDTO {
     String breed;
     LocalDateTime joined;
     Integer feedingsPerDay;
-    Duration feedingDuration;
     Long ownerId;
     Long stableId;
 }
