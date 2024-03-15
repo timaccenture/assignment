@@ -141,7 +141,7 @@ public class FeedingServiceImplTest {
         when(horseMapper.horseEntityToDto(HorseEntity.builder().build())).thenReturn(HorseDTO.builder().build());
 
         List<HorseDTO> returnedHorseDTOList = feedingServiceImpl.checkHorsesEligibleForFeedingButNotBeenFed(
-                Duration.ofHours(2),
+                2,
                 LocalTime.of(12, 0));
 
         assertFalse(returnedHorseDTOList.stream().allMatch(Objects::isNull)); //check if list contains only nulls

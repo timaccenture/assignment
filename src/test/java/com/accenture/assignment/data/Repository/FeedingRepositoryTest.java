@@ -44,7 +44,6 @@ public class FeedingRepositoryTest {
         // tests when it returns feedingEntity
         LocalTime localTime = LocalTime.of(8,0,0);
         List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsAfterLocalTimeParam(localTime);
-
         assertEquals(List.of(feedingEntity),feedingEntityList);
     }
 

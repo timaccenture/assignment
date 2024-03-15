@@ -18,7 +18,6 @@ public interface FeedingRepository extends JpaRepository<FeedingEntity, Long> {
     //also returns List of FeedingEntities that are in process ie localTime is between startTime and endTime of FeedingEntity
     @Query("select f from FeedingEntity f where f.startTime < :LocalTimeParam and f.done = false")
     List<FeedingEntity> getFeedingsBeforeLocalTimeParamAndNotDone(@Param("LocalTimeParam") LocalTime localTime);
-
     @Query("select f from FeedingEntity f where f.startTime < :LocalTimeParam and f.ateAll = false")
     List<FeedingEntity> getFeedingsBeforeLocalTimeParamAndNotAteAll(@Param("LocalTimeParam") LocalTime localTime);
 

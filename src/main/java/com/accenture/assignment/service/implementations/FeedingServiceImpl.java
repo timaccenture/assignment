@@ -36,9 +36,11 @@ public class FeedingServiceImpl implements FeedingService {
 
     @Override
     public void create(FeedingDTO feedingDTO) {
+        //TODO: ateall calculate, times and duration connection
         FeedingEntity feedingEntity = feedingMapper.feedingDtoToEntity(feedingDTO);
         feedingRepository.save(feedingEntity);
     }
+
 
     @Override
     public List<FeedingDTO> findAll() {
@@ -93,7 +95,9 @@ public class FeedingServiceImpl implements FeedingService {
         } else {
             feedingEntityList = feedingRepository.getFeedingsAfterLocalTimeParam(localTime);
         }
-        return feedingEntityList.stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList();
+        return feedingEntityList
+                .stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList()
+                .stream().distinct().toList();
     }
 
     @Override
@@ -106,9 +110,9 @@ public class FeedingServiceImpl implements FeedingService {
     }
 
     @Override
-    public List<HorseDTO> checkHorsesEligibleForFeedingButNotBeenFed(Duration hours, LocalTime localTime) {
+    public List<HorseDTO> checkHorsesEligibleForFeedingButNotBeenFed(Integer hours, LocalTime localTime) {
         //6. check if horses have not been fed even when eligible for more than x hours
-        LocalTime newLocalTime = localTime.minus(hours);
+        LocalTime newLocalTime = localTime.minus(Duration.ofHours(hours));
         List<FeedingEntity> feedingEntityList = feedingRepository.getFeedingsBeforeLocalTimeParamAndNotDone(newLocalTime);
         return feedingEntityList
                 .stream().map(feedingEntity -> horseMapper.horseEntityToDto(feedingEntity.getHorse())).toList()

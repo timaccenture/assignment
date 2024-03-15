@@ -25,7 +25,7 @@ public interface FeedingService {
 
     void releasingFood(UUID uuid);
 
-    List<HorseDTO> checkHorsesEligibleForFeedingButNotBeenFed(Duration hours, LocalTime localTime);
+    List<HorseDTO> checkHorsesEligibleForFeedingButNotBeenFed(Integer hours, LocalTime localTime);
 
     List<HorseDTO> checkHorsesByNumberOfMissedFeedingRanges(Integer number, LocalTime localTime);
 
