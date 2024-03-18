@@ -14,6 +14,14 @@ insert into food_entity (id, name, weight) values (1, "food1",3)
 insert into food_entity (id, name, weight) values (2, "food2",5)
 insert into food_entity (id, name, weight) values (3, "food3",2)
 insert into food_entity (id, name, weight) values (4, "food4",1)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (1,1)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (1,3)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (1,4)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (2,1)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (3,1)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (3,2)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (3,3)
+insert into feeding_entity_foods (feeding_entity_id, foods_id) values (3,4)
 
 
 
